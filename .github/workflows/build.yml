@@ -6,6 +6,10 @@ on:
 jobs:
   build-gradle-project:
     runs-on: ubuntu-latest
+    env:
+      DATASOURCE_URL : ${{  secrets.DATASOURCE_URL  }}
+      DATASOURCE_ADMIN : ${{  secrets.DATASOURCE_ADMIN  }}
+      DATASOURCE_PASSWORD : ${{  secrets.DATASOURCE_PASSWORD  }}
     steps:
     - name: Checkout project sources
       uses: actions/checkout@v3
