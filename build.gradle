@@ -27,12 +27,23 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
+// build.gradle
 
-def activeProfile = project.hasProperty('profile') ? project.property('profile') : 'dev'
-
-tasks.withType(JavaExec).configureEach {
-	systemProperty 'spring.profiles.active', activeProfile
+// Define a task to copy the necessary properties file based on the environment
+tasks.register('copyPropertiesFile', Copy) {
+	from "src/main/resources" // Path to your properties files
+	into "build/resources/main" // Destination directory
+	// Choose the file based on the environment variable or build type
+	if (project.hasProperty('env') && project.env == 'prod') {
+		include 'application-prod.properties'
+	} else {
+		include 'application-dev.properties'
+	}
 }
+
+// Ensure that the copyPropertiesFile task runs before the build
+compileJava.dependsOn(copyPropertiesFile)
+
 
 tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'
