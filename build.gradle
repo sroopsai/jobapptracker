@@ -28,6 +28,12 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+def activeProfile = project.hasProperty('profile') ? project.property('profile') : 'dev'
+
+tasks.withType(JavaExec).configureEach {
+	systemProperty 'spring.profiles.active', activeProfile
+}
+
 tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
